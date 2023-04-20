@@ -23,7 +23,7 @@ def upgrade():
     """
     op.create_table(
         'user',
-        sa.Column('id', sa.String(length=255), primary_key=True),
+        sa.Column('id', sa.String(length=255), primary_key=True, server_default=sa.text('uuid_generate_v4()'), nullable=False),
         sa.Column('fullname', sa.String(length=50), nullable=False),
         sa.Column('email', sa.String(length=120), unique=True, nullable=False),
         sa.Column('address', sa.String(length=120), nullable=True),

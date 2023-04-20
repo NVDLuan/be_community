@@ -22,9 +22,11 @@ def upgrade():
     """
     op.create_table(
         'recomment',
-        sa.Column('id', sa.String(length=255), primary_key=True),
-        sa.Column('id_user', sa.String(length=255), sa.ForeignKey('user.id'), nullable=False),
-        sa.Column('id_cmt', sa.String(length=255), sa.ForeignKey('comment.id'), nullable=False),
+        sa.Column('id', sa.String(length=255), primary_key=True, server_default=sa.text('uuid_generate_v4()'), nullable=False),
+        sa.Column('id_user', sa.String(length=255), sa.ForeignKey('user.id', onupdate='CASCADE',
+                                            ondelete='CASCADE', deferrable=True)),
+        sa.Column('id_cmt', sa.String(length=255), sa.ForeignKey('comment.id', onupdate='CASCADE',
+                                            ondelete='CASCADE', deferrable=True)),
         sa.Column('content', sa.String(length=500), nullable=False),
         sa.Column('image', sa.String(length=256), nullable=True),
         sa.Column('time_create', sa.DateTime(), nullable=False, server_default=sa.text("(now() at time zone 'UTC')")),

@@ -48,7 +48,7 @@ class UserService:
         return response
 
     def suggest_follow(self, user_id, skip: int = None, limit: int = None):
-        data = user.suggest_follow_by_user(db = self.db, user_id=user_id, limit=limit, skip=skip)
+        data = user.get_user_follower_of_user(db = self.db, user_id=user_id, limit=limit, skip=skip)
         # response = []
         # if len(data) == 0:
         #     return None, 0

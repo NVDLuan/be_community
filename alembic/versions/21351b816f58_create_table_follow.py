@@ -22,8 +22,9 @@ def upgrade():
     """
     op.create_table(
         'follower',
-        sa.Column('id', sa.String(length=255), primary_key=True),
-        sa.Column('id_user_fr', sa.String(length=255), sa.ForeignKey('user.id'), nullable=False),
+        sa.Column('id', sa.String(length=255), primary_key=True, server_default=sa.text('uuid_generate_v4()'), nullable=False),
+        sa.Column('id_user_fr', sa.String(length=255), sa.ForeignKey('user.id', onupdate='CASCADE',
+                                            ondelete='CASCADE', deferrable=True)),
     )
 
 

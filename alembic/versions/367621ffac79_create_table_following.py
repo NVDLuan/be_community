@@ -19,9 +19,11 @@ depends_on = None
 def upgrade() -> None:
     op.create_table(
         'following',
-        sa.Column('id', sa.String(length=255), primary_key=True),
-        sa.Column('id_follower', sa.String(length=255), sa.ForeignKey('follower.id'), nullable=False),
-        sa.Column('id_user_to', sa.String(length=255), sa.ForeignKey('user.id'), nullable=False),
+        sa.Column('id', sa.String(length=255), primary_key=True, server_default=sa.text('uuid_generate_v4()'), nullable=False),
+        sa.Column('id_follower', sa.String(length=255), sa.ForeignKey('follower.id', onupdate='CASCADE',
+                                            ondelete='CASCADE', deferrable=True)),
+        sa.Column('id_user_to', sa.String(length=255), sa.ForeignKey('user.id', onupdate='CASCADE',
+                                            ondelete='CASCADE', deferrable=True)),
     )
 
 

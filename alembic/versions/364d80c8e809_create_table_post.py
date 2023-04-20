@@ -21,10 +21,10 @@ def upgrade():
     """
     op.create_table(
         'post',
-        sa.Column('id', sa.String(length=255), primary_key=True),
+        sa.Column('id', sa.String(length=255), primary_key=True, server_default=sa.text('uuid_generate_v4()'), nullable=False),
         sa.Column('title', sa.String(length=100), nullable=False),
         sa.Column('content', sa.String(length=5000), nullable=False),
-        sa.Column('id_user', sa.String(length=255), sa.ForeignKey('user.id'), nullable=False),
+        sa.Column('id_user', sa.String(length=255), sa.ForeignKey('user.id', onupdate='CASCADE', ondelete='CASCADE', deferrable=True)),
         sa.Column('time_create', sa.DateTime(), nullable=False, server_default=sa.text("(now() at time zone 'UTC')")),
         sa.Column('image', sa.String(length=256), nullable=True),
         sa.Column('status', sa.String(length=20), nullable=True),

@@ -10,7 +10,7 @@ def make_response_json(data, status: int, message: str):
     }
 
 
-def make_response_json(data, count: int, status: int, message: str):
+def make_response_json_4_param(data, count: int, status: int, message: str):
     return {
         "data": data,
         "count": count,

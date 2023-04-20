@@ -5,6 +5,7 @@ from sqlalchemy.orm import Session
 
 from app.crud.comment import comment
 from app.crud.post import post
+from app.models.user import User
 from app.schemas.post import CreatePost, UpdatePost, PostResponse
 from app.crud.like import like
 
@@ -21,15 +22,15 @@ class PostService:
 
     def update_post(self, id_user: str, post_id: str, post_cr: UpdatePost):
         post_in = post.get(self.db, post_id)
-        if post_in.id_user is not id_user:
+        if post_in.id_user != id_user:
             raise HTTPException(status_code=403, detail="PERMISSION DENIED")
         result = post.update(self.db, post_in, post_cr)
         self.db.commit()
         return result
 
-    def remove_post(self, id_user:str, post_id:str):
-        post_in = post.get(self.db, post_id)
-        if post_in.id_user is not id_user:
+    def remove_post(self, user: User, post_id: str):
+        post_in = post.get(db=self.db, id=post_id)
+        if post_in.id_user != user.id:
             raise HTTPException(status_code=403, detail="PERMISSION DENIED")
         result = post.remove(db=self.db, id=post_id, auto_commit=True)
         return result

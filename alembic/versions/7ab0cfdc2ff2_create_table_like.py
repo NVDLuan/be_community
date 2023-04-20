@@ -22,9 +22,11 @@ def upgrade():
     """
     op.create_table(
         'like',
-        sa.Column('id', sa.String(length=255), primary_key=True),
-        sa.Column('id_user', sa.String(length=255), sa.ForeignKey('user.id'), nullable=False),
-        sa.Column('id_post', sa.String(length=255), sa.ForeignKey('post.id'), nullable=False),
+        sa.Column('id', sa.String(length=255), primary_key=True, server_default=sa.text('uuid_generate_v4()'), nullable=False),
+        sa.Column('id_user', sa.String(length=255), sa.ForeignKey('user.id', onupdate='CASCADE',
+                                            ondelete='CASCADE', deferrable=True)),
+        sa.Column('id_post', sa.String(length=255), sa.ForeignKey('post.id', onupdate='CASCADE',
+                                            ondelete='CASCADE', deferrable=True)),
     )
 
 
