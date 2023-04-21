@@ -18,7 +18,7 @@ class PostService:
         post_cr.id = uuid.uuid4()
         result = post.create(db=self.db, obj_in=post_cr, auto_commit=True)
         self.db.commit()
-        return result
+        return PostResponse.from_orm(result)
 
     def update_post(self, id_user: str, post_id: str, post_cr: UpdatePost):
         post_in = post.get(self.db, post_id)

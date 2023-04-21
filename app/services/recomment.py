@@ -16,7 +16,8 @@ class RecommentService:
     def create_recomnent_to_post(self, user_id: str, recomment_in: RecommentCreate):
         recomment_in.id = uuid.uuid4()
         recomment_in.id_user = user_id
-        return recomment.create(db=self.db, obj_in=recomment_in, auto_commit=True)
+        result = recomment.create(db=self.db, obj_in=recomment_in, auto_commit=True)
+        return RecommentResponse.from_orm(result)
 
     def update_recomment_of_user(self, user_id: str, recomment_in: RecommentUpdate):
         comment_db = recomment.get(db=self.db, id=recomment_in.id)

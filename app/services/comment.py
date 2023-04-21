@@ -15,7 +15,8 @@ class CommentService:
     def create_comnent_to_post(self, user_id: str, comment_in: CommentCreate):
         comment_in.id = uuid.uuid4()
         comment_in.id_user = user_id
-        return  comment.create(db=self.db, obj_in=comment_in, auto_commit=True)
+        data = comment.create(db=self.db, obj_in=comment_in, auto_commit=True)
+        return CommentResponse.from_orm(data)
 
     def update_comment_of_user(self, user_id: str, comment_in: CommentUpdate):
         comment_db = comment.get(db=self.db, id=comment_in.id)
