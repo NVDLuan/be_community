@@ -9,7 +9,6 @@ from app.models.following import Following
 from app.models.user import User
 from app.schemas.follower import FollowerCreate, FollowerUpdate
 from app.schemas.follow import FollowingCreate, FollowingUpdate
-
 class CRUDFollower(CRUDBase[Follower, FollowerCreate, FollowerUpdate]):
 
     def create_only_one(self, db: Session, user_id: str) -> str:

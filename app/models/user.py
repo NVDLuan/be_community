@@ -18,7 +18,7 @@ class User(Base):
     birthday = Column(DATE)
     lasted_login = Column(DateTime)
     status = Column(String(255))
-    time_create = Column(DateTime, default=datetime.now())
+    time_create = Column(DateTime, default=datetime.now)
     is_super = Column(Boolean)
     description = Column(String(255))
     image_cover = Column(String(255))

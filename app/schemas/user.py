@@ -28,12 +28,26 @@ class UserCreate(UserBase):
     is_super: bool = False
 
 
-class UserUpdate(BaseModel):
+class UpdateMe(BaseModel):
     address: Optional[str] = None
     sex: Optional[str] = None
     fullname: Optional[str] = None
     birthday: Optional[date] = None
     description: Optional[str] = None
+
+
+class UserUpdate(BaseModel):
+    id: Optional[str] = None
+    email: Optional[EmailStr] = None
+    address: Optional[str] = None
+    avatar: Optional[str] = None
+    is_activate: Optional[bool] = True
+    sex: Optional[str] = None
+    fullname: Optional[str] = None
+    birthday: Optional[date] = None
+    description: Optional[str] = None
+    image_cover: Optional[str] = None
+    time_create: Optional[datetime] = None
 
 class UserInfo(BaseModel):
      id: str = Field(alias="id_user")
@@ -66,4 +80,9 @@ class ResponseUser(BaseModel):
     class Config:
         orm_mode = True
 
+
+class ChangePassword(BaseModel):
+    password: Optional[str] = None
+    new_password: Optional[str] = None
+    confirm_password: Optional[str] = None
 

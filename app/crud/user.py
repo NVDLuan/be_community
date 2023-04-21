@@ -3,9 +3,9 @@ import uuid
 from typing import Any, Dict, Optional, Union
 from uuid import uuid4
 
-from sqlalchemy import not_
-from sqlalchemy.orm import Session
 
+from sqlalchemy.orm import Session
+from sqlalchemy import select, and_, not_
 from app.models.user import User
 
 from app.schemas.user import UserCreate, UserUpdate
@@ -26,7 +26,7 @@ class CRUDUser(CRUDBase[User, UserCreate, UserUpdate]):
         return user_db
 
     def get_user_by_email(self, db: Session, email: str):
-        user = db.query(User).filter(User.email == email).all()
+        user = db.query(User).filter(User.email == email).first()
         return user
 
 
@@ -55,7 +55,7 @@ class CRUDUser(CRUDBase[User, UserCreate, UserUpdate]):
             filter(Follower.id_user_fr == user_id)
         if skip is not None and limit is not None:
             query.offset(skip).limit(limit)
-        return query.all()
+        return query.all(), query.count()
 
     def get_user_follower_of_user(self, db: Session, user_id:str, skip: int = None, limit: int = None):
         query = db.query(self.model).join(Follower, self.model.id == Follower.id_user_fr).\
@@ -63,17 +63,18 @@ class CRUDUser(CRUDBase[User, UserCreate, UserUpdate]):
             filter(Following.id_user_to == user_id)
         if skip is not None and limit is not None:
             query.offset(skip).limit(limit)
-        return query.all()
+        return query.all(), query.count()
 
-    def suggest_follow_by_user(self, db: Session, user_id: str, skip: int = None, limit: int = None):
-        user_followed = db.query(Following.id_user_to).join(Follower, Following.id_follower == Follower.id).filter(Follower.id_user_fr == user_id).all()
-        return user_followed
-        # query = db.query(self.model).filter(self.model.id is not any(user_followed))
-        #
-        # if skip is not None and limit is not None:
-        #     query.offset(skip).limit(limit)
-        #
-        # return query.all(), query.count()
+    def suggest_follow_by_user(self, db: Session, user_id: str, follower_id: str, skip: int = None, limit: int = None):
+        iquery = db.query(Following).filter(Following.id_follower==follower_id).all()
+        condition =[]
+        for item in iquery:
+            condition.append(item.id_user_to)
+        # query=db.query(self.model). \
+        #         filter(not_(self.model.following.any(id_user_to=user_id)))
+        query = db.query(self.model).filter(and_(not_(self.model.id.in_(condition)), self.model.id!=user_id))
+        # query = db.query(self.model, Following).join(Following, and_(self.model.id == Following.id_user_to, Following.id_follower == follower_id), isouter=True).filter(self.model.id!=any(iquery['id_user_to']))
+        return query.all(), query.count()
 
 
 user = CRUDUser(User)

@@ -11,11 +11,11 @@ from app.api.depends.user import get_current_user_active
 route = APIRouter()
 
 
-@route.post("/follow/")
-async def create_folow(fl: FollowingCreate, db: Session = Depends(get_db), user: User = Depends(get_current_user_active)):
+@route.post("/follow/create/{pk}")
+async def create_folow(pk: str, db: Session = Depends(get_db), user: User = Depends(get_current_user_active)):
     # try:
     service = FollowService(db=db)
-    result = service.create_following(user_id=user.id, follow=fl)
+    result = service.create_following(user_id=user.id, pk=pk)
     return {
         "data": result,
         "meta": {

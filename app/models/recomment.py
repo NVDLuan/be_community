@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from sqlalchemy import Column, Integer, String, DateTime, ForeignKey
 from sqlalchemy.orm import relationship
 
@@ -16,7 +18,7 @@ class Recomment(Base):
     id_cmt = Column(String(255), ForeignKey("comment.id", ondelete="CASCADE", onupdate='CASCADE', deferrable=True))
     content = Column(String(1000))
     image = Column(String(255))
-    time_create = Column(DateTime)
+    time_create = Column(DateTime, default=datetime.now)
 
     # Relationship
     user = relationship(User, back_populates="recomment")

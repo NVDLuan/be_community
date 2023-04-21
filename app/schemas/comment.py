@@ -11,7 +11,6 @@ class CommentBase(BaseModel):
     id_post: Optional[str] = None
     content: Optional[str] = None
     image: Optional[str] = None
-    time_create: Optional[datetime] = None
 
     class Config:
         orm_mode = True
@@ -34,4 +33,5 @@ class CommentResponse(BaseModel):
     time_create: Optional[datetime] = None
 
     class Config:
+        orm_mode = True
         arbitrary_types_allowed = True

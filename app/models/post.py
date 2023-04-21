@@ -10,7 +10,7 @@ class Post(Base):
     title = Column(String(255))
     content = Column(String(1000))
     id_user = Column(String(255), ForeignKey("user.id", ondelete="CASCADE", onupdate="CASCADE", deferrable=True),  nullable=False,)
-    time_create = Column(DateTime, default=datetime.now())
+    time_create = Column(DateTime, default=datetime.now)
     image = Column(String(255))
     status = Column(String(20))
 

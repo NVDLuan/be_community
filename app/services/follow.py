@@ -1,5 +1,6 @@
 import uuid
 
+from fastapi import HTTPException
 from sqlalchemy.orm import Session
 from app.crud.follow import follower, following
 from app.schemas.follow import FollowingCreate
@@ -11,9 +12,14 @@ class FollowService:
         id_follower = follower.create_only_one(self.db, user_id)
         return following.get_count_follow(self.db, id_follower)
 
-    def create_following(self, user_id: str, follow: FollowingCreate):
+    def create_following(self, user_id: str, pk: str):
         follower.create_only_one(self.db, user_id)
         id_follower = follower.get_id_by_user_id(self.db, user_id)
+        status = following.get_following_by_userto_fr(db=self.db, follower_id=id_follower.id, user_to=pk)
+        if status is not None:
+            raise HTTPException(status_code=400, detail="Follower Created")
+        follow = FollowingCreate()
+        follow.id_user_to = pk
         follow.id_follower = id_follower.id
         follow.id = uuid.uuid4()
         return following.create(db=self.db, obj_in=follow)

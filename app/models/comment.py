@@ -14,7 +14,7 @@ class Comment(Base):
     id_post = Column(String(255), ForeignKey("post.id", ondelete="CASCADE", onupdate='CASCADE', deferrable=True))
     content = Column(String(1000))
     image = Column(String(255))
-    time_create = Column(DateTime)
+    time_create = Column(DateTime, default=datetime.now)
 
     # Relationship
     user = relationship(User, back_populates="comment")
