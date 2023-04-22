@@ -39,5 +39,5 @@ def update_comment(comment_update: CommentUpdate, db: Session = Depends(get_db),
 @route.delete("/comment/{pk}")
 def remove_commnet(pk: str, user: User = Depends(get_current_user_active), db:Session = Depends(get_db)):
     service = CommentService(db=db)
-    response = service.remove_comment_by_id(user, pk)
-    return make_response_json(status=200, message="deleted success")
+    response = service.remove_comment_by_id(user=user, comment_id=pk )
+    return make_response_json( data=response,status=200, message="deleted success")

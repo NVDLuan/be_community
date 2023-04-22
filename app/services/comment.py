@@ -35,9 +35,9 @@ class CommentService:
         return response
 
     def remove_comment_by_id(self, user: User, comment_id:str):
-        data = comment.get(db = self.db, id=comment_id)
-        if data.id_user is not user.id:
+        data = comment.get(db=self.db, id=comment_id)
+        if data.id_user != user.id:
             raise HTTPException(status_code=401, detail="ko phai nguoi so huu")
         status = comment.remove(db=self.db, id=comment_id, auto_commit=True)
         self.db.commit()
-        return status
+        return data

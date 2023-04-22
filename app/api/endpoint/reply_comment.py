@@ -21,9 +21,9 @@ def get_recomment_by_post(pk: str, skip: int, limit: int,
 
 
 @route.post("/recomment/create")
-def create_recomment(comment_in: RecommentCreate, db: Session = Depends(get_db), user: User = Depends(get_current_user_active)):
+def create_recomment(recomment_in: RecommentCreate, db: Session = Depends(get_db), user: User = Depends(get_current_user_active)):
     service = RecommentService(db = db)
-    response = service.create_recomnent_to_post(user_id=user.id, comment_in=comment_in)
+    response = service.create_recomnent_to_post(user_id=user.id, recomment_in=recomment_in)
     return make_response_json(data=response, status=200, message="reate comment success")
 
 
