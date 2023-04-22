@@ -21,7 +21,7 @@ class RecommentService:
 
     def update_recomment_of_user(self, user_id: str, recomment_in: RecommentUpdate):
         comment_db = recomment.get(db=self.db, id=recomment_in.id)
-        if comment_db.id_user is not user_id:
+        if comment_db.id_user != user_id:
             raise HTTPException(status_code=401, detail="ban ko phai nguoi so huu")
         return recomment.update(db=self.db, db_obj=comment_db, obj_in=recomment_in)
 
@@ -37,7 +37,7 @@ class RecommentService:
 
     def remove_recomment_by_id(self, user: User, comment_id: str):
         data = recomment.get(db = self.db, id=comment_id)
-        if data.id_user is not user.id:
+        if data.id_user != user.id:
             raise HTTPException(status_code=401, detail="ko phai nguoi so huu")
         status = recomment.remove(db=self.db, id=comment_id, auto_commit=True)
         self.db.commit()

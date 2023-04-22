@@ -20,7 +20,7 @@ class CommentService:
 
     def update_comment_of_user(self, user_id: str, comment_in: CommentUpdate):
         comment_db = comment.get(db=self.db, id=comment_in.id)
-        if comment_db.id_user is not user_id:
+        if comment_db.id_user != user_id:
             raise HTTPException(status_code=401, detail="ban ko phai nguoi so huu")
         return comment.update(db=self.db, db_obj=comment_db, obj_in=comment_in)
 
@@ -40,4 +40,4 @@ class CommentService:
             raise HTTPException(status_code=401, detail="ko phai nguoi so huu")
         status = comment.remove(db=self.db, id=comment_id, auto_commit=True)
         self.db.commit()
-        return data
+        return status
