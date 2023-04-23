@@ -13,7 +13,7 @@ class CRUDRecomment(CRUDBase[Recomment, RecommentCreate, RecommentUpdate]):
         return query.count()
 
     def get_recomment_by_comment(self, db: Session, id_comment: str, skip: int, limit: int):
-        query = db.query(self.model).filter(self.model.id == id_comment)
+        query = db.query(self.model).filter(self.model.id_cmt == id_comment)
         if skip is not None and limit is not None:
             query.offset(skip).limit(limit)
         return query.all()

@@ -14,7 +14,7 @@ route = APIRouter()
 
 
 @route.get("/comment/{pk}")
-def get_comment_by_post(pk: str, skip: int, limit: int,
+def get_comment_by_post(pk: str, skip: int = 0, limit: int = 10,
                         db: Session = Depends(get_db),
                         user: User = Depends(get_current_user_active)):
     service = CommentService(db=db)

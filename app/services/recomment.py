@@ -35,10 +35,10 @@ class RecommentService:
             response.append(RecommentResponse.from_orm(item))
         return response
 
-    def remove_recomment_by_id(self, user: User, comment_id: str):
-        data = recomment.get(db = self.db, id=comment_id)
+    def remove_recomment_by_id(self, user: User, recomment_id: str):
+        data = recomment.get(db = self.db, id=recomment_id)
         if data.id_user != user.id:
             raise HTTPException(status_code=401, detail="ko phai nguoi so huu")
-        status = recomment.remove(db=self.db, id=comment_id, auto_commit=True)
+        status = recomment.remove(db=self.db, id=recomment_id, auto_commit=True)
         self.db.commit()
         return status
