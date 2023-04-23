@@ -46,4 +46,10 @@ def remove_like(request: LikeCreate, db: Session = Depends(get_db), user: User =
     return make_response_json(data=response, status=202, message="Remove like success")
 
 
+@route.get("/like/count/{pk}")
+def get_count_like_of_post(pk:str, db: Session = Depends(get_db), user: User = Depends(get_current_user_active)):
+    service = LikeService(db=db)
+    response = service.get_user_like_on_post(pk)
+    return make_response_json(data=response, status=200, message="get count like success")
+
 

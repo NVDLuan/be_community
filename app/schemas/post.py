@@ -25,6 +25,7 @@ class PostResponse(BaseModel):
     time_create: Optional[datetime] = None
     like_count: Optional[int] = None
     comment_count: Optional[int] = None
+    check_like: Optional[bool] = None
     class Config:
         orm_mode = True
         arbitrary_types_allowed = True
