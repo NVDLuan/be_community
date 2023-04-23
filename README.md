@@ -5,10 +5,10 @@
     python -m venv venv
 
     ./venv/Scripts/activate 
-## migrate models to database 
-    alembic upgrade head
 ## install library
     pip install -r requirements.txt
+## migrate models to database 
+    alembic upgrade head
 ## run project 
     uvicorn app.main:app --reload
 # on Linux, MacOS

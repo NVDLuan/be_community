@@ -41,3 +41,10 @@ class FollowService:
 
     def follow_friend_suggest(self, user_id: str):
         pass
+
+    def check_follow_to_user(self, user_id: str, user_to: str):
+        fl = follower.get_id_by_user_id(self.db, user_id)
+        flw = following.get_following_by_userto_fr(self.db, fl.id, user_to)
+        if flw is not None:
+            return True
+        return False

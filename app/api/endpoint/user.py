@@ -88,7 +88,7 @@ def get_me(user: User = Depends(get_current_user_active), db:Session = Depends(g
 @route.get("/user/{pk}")
 def get_user(pk:str, user:User = Depends(get_current_user_active), db:Session = Depends(get_db)):
     service = UserService(db=db)
-    response = service.get_user_by_id(user_id=pk)
+    response = service.get_user_by_id(user_id=pk, user_fr=user.id)
     return {
         "data": response,
         "meta": {

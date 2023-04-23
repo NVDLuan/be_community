@@ -77,6 +77,7 @@ class ResponseUser(BaseModel):
     time_create: Optional[datetime] = None
     follower_count: Optional[int] = None
     following_count: Optional[int] = None
+    check_follow: Optional[bool] = None
     class Config:
         orm_mode = True
 

@@ -11,7 +11,7 @@ from app.schemas.follower import FollowerCreate, FollowerUpdate
 from app.schemas.follow import FollowingCreate, FollowingUpdate
 class CRUDFollower(CRUDBase[Follower, FollowerCreate, FollowerUpdate]):
 
-    def create_only_one(self, db: Session, user_id: str) -> str:
+    def create_only_one(self, db: Session, user_id: str):
         data_db = db.query(Follower).filter(self.model.id_user_fr == user_id).all()
         if len(data_db) == 0 or data_db is None:
             follow = FollowerCreate()
@@ -20,6 +20,7 @@ class CRUDFollower(CRUDBase[Follower, FollowerCreate, FollowerUpdate]):
             self.create(db=db, obj_in=follow, auto_commit=True)
 
     def get_id_by_user_id(self, db: Session, user_id:str):
+        self.create_only_one(db, user_id)
         data_db = db.query(self.model).filter(self.model.id_user_fr == user_id).first()
         return data_db
 

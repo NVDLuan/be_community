@@ -9,7 +9,7 @@ from app.models.user import User
 from app.schemas.user import UserCreate, UserLogin, UserUpdate, ResponseUser, UpdateMe, ChangePassword
 from app.api.depends.token import get_password_hash, verify_password, create_access_token
 from app.crud.follow import following, follower
-
+from app.services.follow import FollowService
 
 class UserService:
     def __init__(self, db: Session):
@@ -48,31 +48,33 @@ class UserService:
         status_update = user.update(db=self.db, db_obj=user_db, obj_in=data)
         return status_update
 
-    def get_user_by_id(self, user_id: str):
+    def get_user_by_id(self, user_id: str, user_fr:str=None):
         data = user.get(db=self.db, id=user_id)
         response = ResponseUser.from_orm(data)
         response.following_count = following.get_count_following(db=self.db, user_id=user_id)
         response.follower_count = following.get_count_follower(db=self.db, user_id=user_id)
+        if user_fr is not None:
+            fl_service = FollowService(db=self.db)
+            response.check_follow = fl_service.check_follow_to_user(user_id=user_fr, user_to=user_id)
         return response
 
     def suggest_follow(self, user_id, skip: int = None, limit: int = None):
         # data = user.get_user_follower_of_user(db = self.db, user_id=user_id, limit=limit, skip=skip)
-        follower.create_only_one(db=self.db, user_id=user_id)
         follower_db = follower.get_id_by_user_id(db=self.db, user_id=user_id)
         data, count = user.suggest_follow_by_user(db=self.db, user_id=user_id, follower_id=follower_db.id, skip=skip, limit=limit)
-        # response = []
+        response = []
         # if len(data) == 0:
         #     return None, 0
-        # for item in data:
-        #     response.append(ResponseUser.from_orm(item))
-        return data, count, follower_db.id
+        for item in data:
+            response.append(ResponseUser.from_orm(item))
+        return response, count, follower_db.id
 
     def get_user_following_to_user(self, user_id: str, limit:int, skip:int):
         data, count = user.get_user_following_to_user(db = self.db, user_id=user_id, limit=limit, skip= skip)
         return data, count
 
     def get_user_follower_to_user(self, user_id:str, limit:int, skip:int):
-        data,count = user.get_user_follower_of_user(db = self.db, user_id=user_id, limit=limit, skip= skip)
+        data, count = user.get_user_follower_of_user(db = self.db, user_id=user_id, limit=limit, skip= skip)
         return data, count
 
     def update_avatar_to_user(self, user_obj: User, avatar:str):
