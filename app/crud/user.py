@@ -59,7 +59,7 @@ class CRUDUser(CRUDBase[User, UserCreate, UserUpdate]):
 
     def get_user_follower_of_user(self, db: Session, user_id:str, skip: int = None, limit: int = None):
         query = db.query(self.model).join(Follower, self.model.id == Follower.id_user_fr).\
-            join(Following, Following.id_follower == Following.id_follower).\
+            join(Following, Follower.id == Following.id_follower).\
             filter(Following.id_user_to == user_id)
         if skip is not None and limit is not None:
             query.offset(skip).limit(limit)

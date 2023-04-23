@@ -18,27 +18,27 @@ def suggest_follow(skip: int = 0, limit: int = 10, user: User = Depends(get_curr
 @route.get("/user/following/{pk}")
 def get_user_following_by_id(pk:str, skip:int=0, limit:int=10, db:Session = Depends(get_db), user:User = Depends(get_current_user_active)):
     service = UserService(db=db)
-    response, count = service.get_user_following_to_user(pk, limit, skip)
+    response, count = service.get_user_following_to_user(user, pk, limit, skip)
     return make_response_json_4_param(data=response, count = count, status=200, message="get success")
 
 
 @route.get("/user/following_me")
 def get_user_following_by_me(skip:int=0, limit:int=10, db:Session = Depends(get_db), user:User = Depends(get_current_user_active)):
     service = UserService(db=db)
-    response, count = service.get_user_following_to_user(user.id, limit, skip)
+    response, count = service.get_user_following_to_user(user, user.id, limit, skip)
     return make_response_json_4_param(data=response, count = count, status=200, message="get success")
 
 @route.get("/user/follower/{pk}")
 def get_user_follower_by_user(pk:str, skip:int = 0, limit:int =10, db:Session = Depends(get_db), user:User= Depends(get_current_user_active)):
     service = UserService(db=db)
-    response, count = service.get_user_follower_to_user(user.id, limit,skip)
+    response, count = service.get_user_follower_to_user(user, pk, limit,skip)
     return make_response_json_4_param(data=response, count=count, status=200, message="get success")
 
 
 @route.get("/user/follower_me")
 def get_user_follower_by_user(skip:int = 0, limit:int =10, db:Session = Depends(get_db), user:User= Depends(get_current_user_active)):
     service = UserService(db=db)
-    response, count = service.get_user_follower_to_user(user.id, limit,skip)
+    response, count = service.get_user_follower_to_user(user, user.id, limit,skip)
     return make_response_json_4_param(data=response, count=count, status=200, message="get success")
 
 

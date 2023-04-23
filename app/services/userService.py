@@ -69,13 +69,25 @@ class UserService:
             response.append(ResponseUser.from_orm(item))
         return response, count, follower_db.id
 
-    def get_user_following_to_user(self, user_id: str, limit:int, skip:int):
+    def get_user_following_to_user(self, user_call: User, user_id: str, limit:int, skip:int):
         data, count = user.get_user_following_to_user(db = self.db, user_id=user_id, limit=limit, skip= skip)
-        return data, count
+        response =[]
+        fl_service = FollowService(db=self.db)
+        for item in data:
+            tmp = ResponseUser.from_orm(item)
+            tmp.check_follow = fl_service.check_follow_to_user(user_id=user_call.id, user_to=item.id)
+            response.append(tmp)
+        return response, count
 
-    def get_user_follower_to_user(self, user_id:str, limit:int, skip:int):
+    def get_user_follower_to_user(self, user_call:User, user_id:str, limit:int, skip:int):
         data, count = user.get_user_follower_of_user(db = self.db, user_id=user_id, limit=limit, skip= skip)
-        return data, count
+        response=[]
+        fl_service = FollowService(db=self.db)
+        for item in data:
+            tmp = ResponseUser.from_orm(item)
+            tmp.check_follow = fl_service.check_follow_to_user(user_id=user_call.id, user_to=item.id)
+            response.append(tmp)
+        return response, count
 
     def update_avatar_to_user(self, user_obj: User, avatar:str):
         data_update = dict(avatar=avatar)
