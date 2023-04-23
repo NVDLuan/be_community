@@ -24,7 +24,7 @@ class PostService:
         post_in = post.get(self.db, post_id)
         if post_in.id_user != id_user:
             raise HTTPException(status_code=403, detail="PERMISSION DENIED")
-        result = post.update(self.db, post_in, post_cr)
+        result = post.update(db=self.db, db_obj=post_in, obj_in=post_cr)
         self.db.commit()
         return result
 

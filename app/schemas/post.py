@@ -34,5 +34,9 @@ class PostResponse(BaseModel):
 class CreatePost(BasePost):
     pass
 
-class UpdatePost(BasePost):
-    pass
+class UpdatePost(BaseModel):
+    id: Optional[str] = None
+    title: Optional[str] = None
+    content: Optional[str] = None
+    image: Optional[str] = None
+    status: Optional[str] = None
