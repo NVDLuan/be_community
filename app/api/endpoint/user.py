@@ -129,4 +129,4 @@ def search_user_by_name_or_email(search: str, skip: int = 0 , limit:int = 10,
                                  db:Session = Depends(get_db)):
     service = UserService(db=db)
     response, count = service.search_user_by_mail_or_name(search=search, skip=skip, limit=limit)
-    return make_response_json_4_param(data=data, count=count, status=200, message="result search")
+    return make_response_json_4_param(data=response, count=count, status=200, message="result search")
