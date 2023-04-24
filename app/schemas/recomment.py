@@ -21,8 +21,10 @@ class RecommentCreate(RecommentBase):
     id_user: Optional[str] = None
 
 
-class RecommentUpdate(RecommentBase):
-    pass
+class RecommentUpdate(BaseModel):
+    id: Optional[str] = None
+    content: Optional[str] = None
+    image: Optional[str] = None
 
 
 class RecommentResponse(BaseModel):

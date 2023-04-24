@@ -20,8 +20,10 @@ class CommentCreate(CommentBase):
     id_user: Optional[str] = None
 
 
-class CommentUpdate(CommentBase):
-    pass
+class CommentUpdate(BaseModel):
+    id: Optional[str] = None
+    content: Optional[str] = None
+    image: Optional[str] = None
 
 
 class CommentResponse(BaseModel):
