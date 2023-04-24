@@ -8,7 +8,6 @@ from app.schemas.user import UserInfo
 
 class RecommentBase(BaseModel):
     id: Optional[str] = None
-    id_user: Optional[str] = None
     id_cmt: Optional[str] = None
     content: Optional[str] = None
     image: Optional[str] = None
@@ -19,7 +18,7 @@ class RecommentBase(BaseModel):
 
 
 class RecommentCreate(RecommentBase):
-    pass
+    id_user: Optional[str] = None
 
 
 class RecommentUpdate(RecommentBase):
