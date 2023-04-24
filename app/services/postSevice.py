@@ -22,8 +22,10 @@ class PostService:
 
     def update_post(self, id_user: str, post_id: str, post_cr: UpdatePost):
         post_in = post.get(self.db, post_id)
+        if post_in is None:
+            HTTPException(status_code=400, detail="POST NOT AVAILABLE")
         if post_in.id_user != id_user:
-            raise HTTPException(status_code=403, detail="PERMISSION DENIED")
+            raise HTTPException(status_code=401, detail="PERMISSION DENIED")
         result = post.update(db=self.db, db_obj=post_in, obj_in=post_cr)
         self.db.commit()
         return result

@@ -21,6 +21,8 @@ class RecommentService:
 
     def update_recomment_of_user(self, user_id: str, recomment_in: RecommentUpdate):
         comment_db = recomment.get(db=self.db, id=recomment_in.id)
+        if comment_db is None:
+            raise HTTPException(status_code=400, detail="RECOMMENT NOT AVAILABLE")
         if comment_db.id_user != user_id:
             raise HTTPException(status_code=401, detail="ban ko phai nguoi so huu")
         return recomment.update(db=self.db, db_obj=comment_db, obj_in=recomment_in)

@@ -20,6 +20,8 @@ class CommentService:
 
     def update_comment_of_user(self, user_id: str, comment_in: CommentUpdate):
         comment_db = comment.get(db=self.db, id=comment_in.id)
+        if comment_db is None:
+            raise HTTPException(status_code=400, detail="COMMENT NOT AVAILABLE")
         if comment_db.id_user != user_id:
             raise HTTPException(status_code=401, detail="ban ko phai nguoi so huu")
         return comment.update(db=self.db, db_obj=comment_db, obj_in=comment_in)

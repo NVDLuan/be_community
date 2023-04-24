@@ -1,8 +1,8 @@
 [tool.poetry]
-name = "commuity"
+name = "onion-be"
 version = "0.1.0"
 description = ""
-authors = ["luan <nvdluan@gmail.com>"]
+authors = ["Congpc <congpc1305@gmail.com>"]
 
 [tool.poetry.dependencies]
 python = "^3.9"
