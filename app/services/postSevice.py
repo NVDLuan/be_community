@@ -75,3 +75,11 @@ class PostService:
 
     def get_count_like_of_post(self, id_post:str):
         return like.get_count_like_to_post(db=self.db, post_id=id_post)
+
+    def get_post_by_id(self, id:str, id_user):
+        result = post.get(db=self.db, id=id)
+        p = PostResponse.from_orm(result)
+        p.like_count = like.get_count_like_to_post(db=self.db, post_id=result.id)
+        p.comment_count = comment.get_count_comment_by_post(self.db, result.id)
+        p.check_like = like.check_user_like(self.db, id_user, result.id)
+        return  p

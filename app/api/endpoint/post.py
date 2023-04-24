@@ -48,6 +48,11 @@ def get_post_of_me(skip: int = 0, limit: int = 10, db: Session = Depends(get_db)
     response, count = service.get_post_of_me(id_user=user.id, skip=skip, limit=limit)
     return make_response_json_4_param(data=response, count=count, status=200, message="thanh cong")
 
+@route.get("/post/{pk}")
+def get_post_by_id(pk:str, db:Session = Depends(get_db), user: User=Depends(get_current_user_active)):
+    service = PostService(db=db)
+    response = service.get_post_by_id(id=pk, id_user=user.id)
+    return make_response_json(data=response, status=200, message="get success")
 
 @route.get("/post/user")
 def get_post_of_user(user_id: str = None, skip: int = 0, limit: int = 10, db: Session = Depends(get_db), user:User = Depends(get_current_user_active)):
@@ -67,3 +72,4 @@ def delete_post(id_post:str, db:Session = Depends(get_db), user: User = Depends(
     service = PostService(db=db)
     response = service.remove_post(user=user, post_id=id_post)
     return make_response_json(data ="", status = 200, message="delete success")
+
