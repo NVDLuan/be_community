@@ -63,7 +63,7 @@ def get_post_of_user(user_id: str = None, skip: int = 0, limit: int = 10, db: Se
 @route.put("/post/update")
 def update_post(post_update: UpdatePost, db:Session = Depends(get_db), user: User = Depends(get_current_user_active)):
     service = PostService(db=db)
-    response = service.update_post(user.id,post_update.id, post_update)
+    response = service.update_post(id_user=user.id, post_cr=post_update)
     return make_response_json(data=response, status=200, message="update thanh cong")
 
 
