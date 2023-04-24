@@ -121,3 +121,12 @@ def update_avatar(request: ChangePassword, user:User= Depends(get_current_user_a
     service = UserService(db=db)
     response = service.change_password_to_user(user_obj=user, request=request)
     return make_response_json(data = response, status=200, message="update avatar success")
+
+
+@route.get("/user/search")
+def search_user_by_name_or_email(search: str, skip: int = 0 , limit:int = 10,
+                                 user: User = Depends(get_current_user_active),
+                                 db:Session = Depends(get_db)):
+    service = UserService(db=db)
+    response, count = service.search_user_by_mail_or_name(search=search, skip=skip, limit=limit)
+    return make_response_json_4_param(data=data, count=count, status=200, message="result search")

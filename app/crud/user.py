@@ -5,7 +5,7 @@ from uuid import uuid4
 
 
 from sqlalchemy.orm import Session
-from sqlalchemy import select, and_, not_
+from sqlalchemy import select, and_, not_, or_
 from app.models.user import User
 
 from app.schemas.user import UserCreate, UserUpdate
@@ -73,8 +73,14 @@ class CRUDUser(CRUDBase[User, UserCreate, UserUpdate]):
         # query=db.query(self.model). \
         #         filter(not_(self.model.following.any(id_user_to=user_id)))
         query = db.query(self.model).filter(and_(not_(self.model.id.in_(condition)), self.model.id!=user_id))
+        if skip is not None and limit is not None:
+            query.offset(skip).limit(limit)
         # query = db.query(self.model, Following).join(Following, and_(self.model.id == Following.id_user_to, Following.id_follower == follower_id), isouter=True).filter(self.model.id!=any(iquery['id_user_to']))
         return query.all(), query.count()
-
+    def search_user_by_mail_and_name(self, db: Session, search:str, skip:int, limit: int):
+        query = db.query(self.model).filter(or_(self.model.email.like(f"%{search}%"), self.model.fullname.like(f"%{search}%")))
+        if skip is not None and limit is not None:
+            query.offset(skip).limit(limit)
+        return query.all(), query.count()
 
 user = CRUDUser(User)

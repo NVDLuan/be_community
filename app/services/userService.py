@@ -108,3 +108,13 @@ class UserService:
         data_update = dict(password=get_password_hash(request.confirm_password))
         data = user.update(db=self.db, db_obj=user_obj, obj_in=data_update)
         return ResponseUser.from_orm(data)
+
+    def search_user_by_mail_or_name(self, search: str, skip:int, limit: int):
+        data, count = user.search_user_by_mail_and_name(db = self.db, search = search, skip=skip, limit=limit)
+        response = []
+        fl_service = FollowService(db=self.db)
+        for item in data:
+            tmp = ResponseUser.from_orm(item)
+            tmp.check_follow = fl_service.check_follow_to_user(user_id=user_call.id, user_to=item.id)
+            response.append(tmp)
+        return response, count
