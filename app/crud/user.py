@@ -83,4 +83,5 @@ class CRUDUser(CRUDBase[User, UserCreate, UserUpdate]):
             query.offset(skip).limit(limit)
         return query.all(), query.count()
 
+
 user = CRUDUser(User)

@@ -109,8 +109,8 @@ class UserService:
         data = user.update(db=self.db, db_obj=user_obj, obj_in=data_update)
         return ResponseUser.from_orm(data)
 
-    def search_user_by_mail_or_name(self, search: str, skip:int, limit: int):
-        data, count = user.search_user_by_mail_and_name(db = self.db, search = search, skip=skip, limit=limit)
+    def search_user_by_mail_or_name(self, search: str, user_call: User, skip:int, limit: int):
+        data, count = user.search_user_by_mail_and_name(db=self.db, search=search, skip=skip, limit=limit)
         response = []
         fl_service = FollowService(db=self.db)
         for item in data:

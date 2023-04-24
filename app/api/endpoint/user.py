@@ -8,6 +8,16 @@ from app.api.depends.user import user_admin, login_required, get_current_user, g
 from app.models.user import User
 route = APIRouter()
 
+
+@route.get("/user/search")
+def search_user_by_name_or_email(search: str, skip: int = 0 , limit:int = 10,
+                                 user: User = Depends(get_current_user_active),
+                                 db:Session = Depends(get_db)):
+    service = UserService(db=db)
+    response, count = service.search_user_by_mail_or_name(user_call=user, search=search, skip=skip, limit=limit)
+    return make_response_json_4_param(data=response, count=count, status=200, message="result search")
+
+
 @route.get("/user/suggest_follow")
 def suggest_follow(skip: int = 0, limit: int = 10, user: User = Depends(get_current_user_active), db: Session = Depends(get_db)) -> dict:
     service = UserService(db=db)
@@ -122,11 +132,3 @@ def update_avatar(request: ChangePassword, user:User= Depends(get_current_user_a
     response = service.change_password_to_user(user_obj=user, request=request)
     return make_response_json(data = response, status=200, message="update avatar success")
 
-
-@route.get("/user/search")
-def search_user_by_name_or_email(search: str, skip: int = 0 , limit:int = 10,
-                                 user: User = Depends(get_current_user_active),
-                                 db:Session = Depends(get_db)):
-    service = UserService(db=db)
-    response, count = service.search_user_by_mail_or_name(search=search, skip=skip, limit=limit)
-    return make_response_json_4_param(data=response, count=count, status=200, message="result search")
