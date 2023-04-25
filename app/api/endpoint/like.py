@@ -17,14 +17,6 @@ def get_like_on_post(id_post: str, db: Session=Depends(get_db), user: User = Dep
     service = LikeService(db=db)
     response = service.get_user_like_on_post(id_post)
     return make_response_json(data=response, status=200, message="get like success")
-    # return {
-    #     "data": response,
-    #     "meta":{
-    #         "status": 200,
-    #         "detail": ""
-    #     }
-    # }
-
 
 @route.post("/like_to_post")
 def create_like_to_post(request: LikeCreate, db: Session = Depends(get_db), user: User = Depends(get_current_user_active)):
@@ -38,13 +30,11 @@ def create_like_to_post(request: LikeCreate, db: Session = Depends(get_db), user
         }
     }
 
-
 @route.delete("/like_to_post")
 def remove_like(request: LikeCreate, db: Session = Depends(get_db), user: User = Depends(get_current_user_active)):
     service = LikeService(db=db)
     response = service.delete_like(user_id=user.id, like_in=request)
     return make_response_json(data=response, status=202, message="Remove like success")
-
 
 @route.get("/like/count/{pk}")
 def get_count_like_of_post(pk:str, db: Session = Depends(get_db), user: User = Depends(get_current_user_active)):

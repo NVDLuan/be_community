@@ -10,7 +10,6 @@ from app.api.depends.user import get_current_user_active
 
 route = APIRouter()
 
-
 @route.post("/follow/create/{pk}")
 async def create_folow(pk: str, db: Session = Depends(get_db), user: User = Depends(get_current_user_active)):
     # try:
@@ -23,7 +22,6 @@ async def create_folow(pk: str, db: Session = Depends(get_db), user: User = Depe
             "detail": "create follow success"
         }
     }
-
 
 @route.delete("/follow")
 async def remove_follow(user_id_remove:str, user: User = Depends(get_current_user_active), db:Session = Depends(get_db)):
