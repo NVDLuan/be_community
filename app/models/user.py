@@ -14,14 +14,14 @@ class User(Base):
     address = Column(String(255))
     password = Column(String(255))
     sex = Column(String(10))
-    avatar = Column(String(255))
+    avatar = Column(String(255), default="https://res.cloudinary.com/dy0mhielk/image/upload/v1682395261/social/blftkogghkfuft5ipx1d.png")
     birthday = Column(DATE)
     lasted_login = Column(DateTime)
     status = Column(String(255))
     time_create = Column(DateTime, default=datetime.now)
     is_super = Column(Boolean)
     description = Column(String(255))
-    image_cover = Column(String(255))
+    image_cover = Column(String(255), default="https://res.cloudinary.com/dy0mhielk/image/upload/v1682265810/social/bgmeicum5jqhitfy32zj.jpg")
     is_activate = Column(Boolean)
 
     #Relationship
