@@ -120,3 +120,9 @@ def update_avatar(request: ChangePassword, user:User= Depends(get_current_user_a
     response = service.change_password_to_user(user_obj=user, request=request)
     return make_response_json(data = response, status=200, message="update avatar success")
 
+@route.patch("/user/change/image_cover")
+def change_image_cover(image_cover:str, user:User= Depends(get_current_user_active), db: Session=Depends(get_db)):
+    service = UserService(db=db)
+    response = service.update_image_cover_to_user(user, image_cover)
+    return make_response_json(data = response, status=200, message="update avatar success")
+
