@@ -1,5 +1,6 @@
 from typing import Optional
-from pydantic import BaseModel, Field
+
+from pydantic import BaseModel
 
 from app.schemas.user import UserInfo
 
@@ -25,9 +26,8 @@ class LikeRequest(BaseModel):
     id_post: Optional[str] = None
 
 
-
 class LikeResponse(LikeBsase):
-    user: Optional[UserInfo]= None
+    user: Optional[UserInfo] = None
 
     class Config:
         arbitrary_types_allowed = True

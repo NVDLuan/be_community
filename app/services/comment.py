@@ -5,7 +5,9 @@ from sqlalchemy.orm import Session
 
 from app.crud.comment import comment
 from app.models.user import User
-from app.schemas.comment import CommentCreate, CommentUpdate, CommentResponse
+from app.schemas.comment import CommentCreate
+from app.schemas.comment import CommentResponse
+from app.schemas.comment import CommentUpdate
 
 
 class CommentService:
@@ -29,14 +31,14 @@ class CommentService:
     def get_count_comment_by_post(self, id_post: str):
         return comment.get_count_comment_by_post(db=self.db, id_post=id_post)
 
-    def get_comment_by_post(self, id_post:str, skip: int, limit: int):
-        data = comment.get_comment_by_post(db=self.db, id_post=id_post, skip=skip, limit=limit)
+    def get_comment_by_post(self, id_post: str, skip: int, limit: int):
+        data, count = comment.get_comment_by_post(db=self.db, id_post=id_post, skip=skip, limit=limit)
         response = []
         for item in data:
             response.append(CommentResponse.from_orm(item))
-        return response
+        return response, count
 
-    def remove_comment_by_id(self, user: User, comment_id:str):
+    def remove_comment_by_id(self, user: User, comment_id: str):
         data = comment.get(db=self.db, id=comment_id)
         if data.id_user != user.id:
             raise HTTPException(status_code=401, detail="ko phai nguoi so huu")

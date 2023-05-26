@@ -1,10 +1,16 @@
+from datetime import datetime
+
+from sqlalchemy import Column
+from sqlalchemy import DateTime
+from sqlalchemy import ForeignKey
+from sqlalchemy import String
+from sqlalchemy.orm import relationship
+
+from app.crud.base import Base
 from app.models.post import Post
 from app.models.recomment import Recomment
 from app.models.user import User
-from app.crud.base import Base
-from sqlalchemy import Column, String, text, ForeignKey, TIMESTAMP, Boolean, DateTime
-from sqlalchemy.orm import relationship
-from datetime import datetime
+
 
 class Comment(Base):
     __tablename__ = "comment"

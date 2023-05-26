@@ -1,7 +1,7 @@
+from typing import Optional
 
-from typing import Optional, List
-
-from pydantic import BaseModel, EmailStr
+from pydantic import BaseModel
+from pydantic import EmailStr
 
 
 class MailTo(BaseModel):

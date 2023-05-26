@@ -1,7 +1,9 @@
-from app.models.base import Base
-
-from sqlalchemy import Column, String, text, ForeignKey, TIMESTAMP, Boolean, Table
+from sqlalchemy import Column
+from sqlalchemy import ForeignKey
+from sqlalchemy import String
 from sqlalchemy.orm import relationship
+
+from app.models.base import Base
 
 
 class Follower(Base):

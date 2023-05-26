@@ -1,14 +1,15 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter
+from fastapi import Depends
 from sqlalchemy.orm import Session
 
+from app.api.depends.user import get_current_user_active
 from app.api.response.response import make_response_json
 from app.database.database import get_db
 from app.models.user import User
 from app.services.follow import FollowService
-from app.schemas.follow import FollowingCreate
-from app.api.depends.user import get_current_user_active
 
 route = APIRouter()
+
 
 @route.post("/follow/create/{pk}")
 async def create_folow(pk: str, db: Session = Depends(get_db), user: User = Depends(get_current_user_active)):
@@ -23,8 +24,10 @@ async def create_folow(pk: str, db: Session = Depends(get_db), user: User = Depe
         }
     }
 
+
 @route.delete("/follow")
-async def remove_follow(user_id_remove:str, user: User = Depends(get_current_user_active), db:Session = Depends(get_db)):
+async def remove_follow(user_id_remove: str, user: User = Depends(get_current_user_active),
+                        db: Session = Depends(get_db)):
     service = FollowService(db=db)
     response = service.remove_following(user.id, user_id_remove)
     return make_response_json(data=response, status=200, message="deleted success")

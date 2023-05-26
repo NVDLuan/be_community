@@ -1,11 +1,14 @@
-import jwt
-from fastapi import Depends, HTTPException
-from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
-from sqlalchemy.orm import Session
 import logging
 
-from app.crud.user import user
+import jwt
+from fastapi import Depends
+from fastapi import HTTPException
+from fastapi.security import HTTPAuthorizationCredentials
+from fastapi.security import HTTPBearer
+from sqlalchemy.orm import Session
+
 from app.core.settings import settings
+from app.crud.user import user
 from app.database.database import get_db
 from app.models.user import User
 
@@ -55,9 +58,10 @@ def get_current_user(
 
     return db_user
 
+
 def get_current_user_active(
-        token: dict =Depends(login_required),
-        db: Session =Depends(get_db)
+        token: dict = Depends(login_required),
+        db: Session = Depends(get_db)
 ):
     uid = token['uid']
     db_user = user.get(db=db, id=uid)
@@ -73,6 +77,7 @@ def get_current_user_active(
             detail="Account is not active"
         )
     return db_user
+
 
 def user_admin(current_user: User = Depends(get_current_user)) -> User:
     if not user.is_active(current_user) or not current_user.is_super:

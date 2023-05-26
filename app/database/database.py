@@ -3,7 +3,8 @@ from typing import Iterator
 
 import sqlalchemy as sa
 from fastapi_utils.session import FastAPISessionMaker as FastAPISessionMakerBase
-from sqlalchemy.orm import Session, sessionmaker
+from sqlalchemy.orm import Session
+from sqlalchemy.orm import sessionmaker
 from sqlalchemy.pool import NullPool
 
 from app.core.settings import settings
@@ -17,7 +18,8 @@ class FastAPISessionMaker(FastAPISessionMakerBase):
 
         This function may be updated over time to reflect recommended engine configuration for use with FastAPI.
         """
-        return sa.create_engine(uri, poolclass=NullPool, convert_unicode=True, echo=True if settings.SQLALCHEMY_DEBUG else False)
+        return sa.create_engine(uri, poolclass=NullPool, convert_unicode=True,
+                                echo=True if settings.SQLALCHEMY_DEBUG else False)
 
     def get_new_engine(self) -> sa.engine.Engine:
         """

@@ -4,10 +4,13 @@ from fastapi import HTTPException
 from sqlalchemy.orm import Session
 
 from app.crud.comment import comment
+from app.crud.like import like
 from app.crud.post import post
 from app.models.user import User
-from app.schemas.post import CreatePost, UpdatePost, PostResponse
-from app.crud.like import like
+from app.schemas.post import CreatePost
+from app.schemas.post import PostResponse
+from app.schemas.post import UpdatePost
+
 
 class PostService:
     def __init__(self, db: Session):
@@ -43,17 +46,20 @@ class PostService:
         # for item in result:
         #     data.append(self.make_response(item))
         # return data
-        response=[]
+        response = []
         for item in result:
             p = PostResponse.from_orm(item)
-            p.like_count= like.get_count_like_to_post(db=self.db, post_id=item.id)
+            p.like_count = like.get_count_like_to_post(db=self.db, post_id=item.id)
             p.comment_count = comment.get_count_comment_by_post(self.db, item.id)
             p.check_like = like.check_user_like(self.db, id_user, item.id)
             response.append(p)
         return response, count
 
     def make_response(self, user):
-        return dict(id=post.id, status=post.status, title=post.title, content=post.content, image=post.image, user_oner=dict(id_user=post.user_oner.id, name=post.user_oner.fullname, avatar=post.user_oner.avatar))
+        return dict(id=post.id, status=post.status, title=post.title, content=post.content, image=post.image,
+                    user_oner=dict(id_user=post.user_oner.id, name=post.user_oner.fullname,
+                                   avatar=post.user_oner.avatar))
+
     def get_post(self, post_id: str):
         p = post.get(self.db, post_id)
         response = PostResponse.from_orm(p)
@@ -75,7 +81,7 @@ class PostService:
             response.append(p)
         return response, count
 
-    def get_post_of_user(self, id_user: str,user_call:User, skip: int, limit: int):
+    def get_post_of_user(self, id_user: str, user_call: User, skip: int, limit: int):
         result, count = post.get_post_me(self.db, id_user, skip, limit)
         response = []
         for item in result:
@@ -85,10 +91,11 @@ class PostService:
             p.check_like = like.check_user_like(db=self.db, user_id=user_call.id, post_id=p.id)
             response.append(p)
         return response, count
-    def get_count_like_of_post(self, id_post:str):
+
+    def get_count_like_of_post(self, id_post: str):
         return like.get_count_like_to_post(db=self.db, post_id=id_post)
 
-    def get_post_by_id(self, id:str, id_user):
+    def get_post_by_id(self, id: str, id_user):
         result = post.get(db=self.db, id=id)
         p = PostResponse.from_orm(result)
         p.like_count = like.get_count_like_to_post(db=self.db, post_id=id)

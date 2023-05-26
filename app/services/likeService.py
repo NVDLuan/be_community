@@ -4,7 +4,10 @@ from fastapi import HTTPException
 from sqlalchemy.orm import Session
 
 from app.crud.like import like
-from app.schemas.like import LikeCreate, LikeResponse
+from app.schemas.like import LikeCreate
+from app.schemas.like import LikeResponse
+
+
 class LikeService:
     def __init__(self, db: Session):
         self.db = db
@@ -27,9 +30,9 @@ class LikeService:
         self.db.commit()
         return status
 
-    def get_user_like_on_post(self, post_id:str):
+    def get_user_like_on_post(self, post_id: str):
         list_user = like.get_user_like_to_post(db=self.db, post_id=post_id)
-        response =[]
+        response = []
         for item in list_user:
             response.append(LikeResponse.from_orm(item))
         return response

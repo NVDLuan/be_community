@@ -1,4 +1,3 @@
-
 import uuid
 
 from fastapi import HTTPException
@@ -6,7 +5,9 @@ from sqlalchemy.orm import Session
 
 from app.crud.recomment import recomment
 from app.models.user import User
-from app.schemas.recomment import RecommentCreate, RecommentUpdate, RecommentResponse
+from app.schemas.recomment import RecommentCreate
+from app.schemas.recomment import RecommentResponse
+from app.schemas.recomment import RecommentUpdate
 
 
 class RecommentService:
@@ -30,15 +31,15 @@ class RecommentService:
     def get_count_recomment_by_comment(self, id_recomment: str):
         return recomment.get_count_recomment_by_commet(db=self.db, id_comment=id_recomment)
 
-    def get_recomment_by_comment(self, id_comment:str, skip: int, limit: int):
+    def get_recomment_by_comment(self, id_comment: str, skip: int, limit: int):
         data = recomment.get_recomment_by_comment(db=self.db, id_comment=id_comment, skip=skip, limit=limit)
-        response = []
+        response, count = []
         for item in data:
             response.append(RecommentResponse.from_orm(item))
-        return response
+        return response, count
 
     def remove_recomment_by_id(self, user: User, recomment_id: str):
-        data = recomment.get(db = self.db, id=recomment_id)
+        data = recomment.get(db=self.db, id=recomment_id)
         if data.id_user != user.id:
             raise HTTPException(status_code=401, detail="ko phai nguoi so huu")
         status = recomment.remove(db=self.db, id=recomment_id, auto_commit=True)

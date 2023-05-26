@@ -1,5 +1,14 @@
 from fastapi import APIRouter
-from app.api.endpoint import index, user, post,upload, sendMail, follow, like, comment, reply_comment
+
+from app.api.endpoint import comment
+from app.api.endpoint import follow
+from app.api.endpoint import index
+from app.api.endpoint import like
+from app.api.endpoint import post
+from app.api.endpoint import reply_comment
+from app.api.endpoint import sendMail
+from app.api.endpoint import upload
+from app.api.endpoint import user
 
 route = APIRouter()
 

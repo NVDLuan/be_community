@@ -1,8 +1,12 @@
+from sqlalchemy import Column
+from sqlalchemy import DateTime
+from sqlalchemy import ForeignKey
+from sqlalchemy import String
+from sqlalchemy.orm import relationship
+
 from app.models.user import User
 from base import Base
-from sqlalchemy import Column, String, text, ForeignKey,TIMESTAMP,Boolean, DateTime
-from sqlalchemy.orm import relationship
-from datetime import datetime
+
 
 class Friend(Base):
     __tablename__ = "friend"
@@ -15,4 +19,3 @@ class Friend(Base):
     # Relationship
     user_fr = relationship(User, foreign_keys=[id_user_fr])
     user_to = relationship(User, foreign_keys=[id_user_to])
-

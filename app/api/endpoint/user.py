@@ -1,55 +1,78 @@
-from app.api.response.response import make_response_json, make_response_json_4_param
-from app.services.userService import UserService
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter
+from fastapi import Depends
+from fastapi import HTTPException
 from sqlalchemy.orm import Session
+
+from app.api.depends.user import get_current_user_active
+from app.api.depends.user import user_admin
+from app.api.response.response import make_response_json
+from app.api.response.response import make_response_json_4_param
 from app.database.database import get_db
-from app.schemas.user import UserCreate, UserLogin, UpdateMe, ChangePassword
-from app.api.depends.user import user_admin, login_required, get_current_user, get_current_user_active
 from app.models.user import User
+from app.schemas.user import ChangePassword
+from app.schemas.user import UpdateMe
+from app.schemas.user import UserCreate
+from app.schemas.user import UserLogin
+from app.services.userService import UserService
+
 route = APIRouter()
+
+
 @route.get("/user/search")
-def search_user_by_name_or_email(search: str, skip: int = 0 , limit:int = 10,
+def search_user_by_name_or_email(search: str, skip: int = 0, limit: int = 10,
                                  user: User = Depends(get_current_user_active),
-                                 db:Session = Depends(get_db)):
+                                 db: Session = Depends(get_db)):
     service = UserService(db=db)
     response, count = service.search_user_by_mail_or_name(user_call=user, search=search, skip=skip, limit=limit)
     return make_response_json_4_param(data=response, count=count, status=200, message="result search")
 
+
 @route.get("/user/suggest_follow")
-def suggest_follow(skip: int = 0, limit: int = 10, user: User = Depends(get_current_user_active), db: Session = Depends(get_db)) -> dict:
+def suggest_follow(skip: int, limit: int, user: User = Depends(get_current_user_active),
+                   db: Session = Depends(get_db)) -> dict:
     service = UserService(db=db)
-    response, count , mess= service.suggest_follow(user.id, skip, limit)
+    response, count, mess = service.suggest_follow(user_id=user.id, skip=skip, limit=limit)
     return make_response_json_4_param(data=response, count=count, status=200, message=mess)
 
+
 @route.get("/user/following/{pk}")
-def get_user_following_by_id(pk:str, skip:int=0, limit:int=10, db:Session = Depends(get_db), user:User = Depends(get_current_user_active)):
+def get_user_following_by_id(pk: str, skip: int = 0, limit: int = 10, db: Session = Depends(get_db),
+                             user: User = Depends(get_current_user_active)):
     service = UserService(db=db)
     response, count = service.get_user_following_to_user(user, pk, limit, skip)
-    return make_response_json_4_param(data=response, count = count, status=200, message="get success")
+    return make_response_json_4_param(data=response, count=count, status=200, message="get success")
+
 
 @route.get("/user/following_me")
-def get_user_following_by_me(skip:int=0, limit:int=10, db:Session = Depends(get_db), user:User = Depends(get_current_user_active)):
+def get_user_following_by_me(skip: int = 0, limit: int = 10, db: Session = Depends(get_db),
+                             user: User = Depends(get_current_user_active)):
     service = UserService(db=db)
     response, count = service.get_user_following_to_user(user, user.id, limit, skip)
-    return make_response_json_4_param(data=response, count = count, status=200, message="get success")
+    return make_response_json_4_param(data=response, count=count, status=200, message="get success")
+
 
 @route.get("/user/follower/{pk}")
-def get_user_follower_by_user(pk:str, skip:int = 0, limit:int =10, db:Session = Depends(get_db), user:User= Depends(get_current_user_active)):
+def get_user_follower_by_user(pk: str, skip: int = 0, limit: int = 10, db: Session = Depends(get_db),
+                              user: User = Depends(get_current_user_active)):
     service = UserService(db=db)
-    response, count = service.get_user_follower_to_user(user, pk, limit,skip)
+    response, count = service.get_user_follower_to_user(user, pk, limit, skip)
     return make_response_json_4_param(data=response, count=count, status=200, message="get success")
 
+
 @route.get("/user/follower_me")
-def get_user_follower_by_user(skip:int = 0, limit:int =10, db:Session = Depends(get_db), user:User= Depends(get_current_user_active)):
+def get_user_follower_by_user(skip: int = 0, limit: int = 10, db: Session = Depends(get_db),
+                              user: User = Depends(get_current_user_active)):
     service = UserService(db=db)
-    response, count = service.get_user_follower_to_user(user, user.id, limit,skip)
+    response, count = service.get_user_follower_to_user(user, user.id, limit, skip)
     return make_response_json_4_param(data=response, count=count, status=200, message="get success")
+
 
 @route.post("/user/sign_up")
 async def sign_up(user_data: UserCreate, db: Session = Depends(get_db)):
     user_service = UserService(db)
     user = user_service.create_user(user_data)
     return {"message": "create success"}
+
 
 @route.post("/user/login")
 def sign_up(form_data: UserLogin, db: Session = Depends(get_db)):
@@ -58,6 +81,7 @@ def sign_up(form_data: UserLogin, db: Session = Depends(get_db)):
         "status": 200,
         "token": userService.login(form_data)
     }
+
 
 @route.get("/user/get_all", dependencies=[Depends(user_admin)])
 def get_all_user(db: Session = Depends(get_db)):
@@ -73,8 +97,9 @@ def get_all_user(db: Session = Depends(get_db)):
     except Exception as e:
         HTTPException(status_code=401, detail="permision")
 
+
 @route.get("/user/get_me")
-def get_me(user: User = Depends(get_current_user_active), db:Session = Depends(get_db)):
+def get_me(user: User = Depends(get_current_user_active), db: Session = Depends(get_db)):
     service = UserService(db=db)
     response = service.get_user_by_id(user_id=user.id)
     return {"data": response,
@@ -82,10 +107,11 @@ def get_me(user: User = Depends(get_current_user_active), db:Session = Depends(g
                 "status": 200,
                 "detail": "get me success"
             }
-        }
+            }
+
 
 @route.get("/user/{pk}")
-def get_user(pk:str, user:User = Depends(get_current_user_active), db:Session = Depends(get_db)):
+def get_user(pk: str, user: User = Depends(get_current_user_active), db: Session = Depends(get_db)):
     service = UserService(db=db)
     response = service.get_user_by_id(user_id=pk, user_fr=user.id)
     return {
@@ -95,6 +121,7 @@ def get_user(pk:str, user:User = Depends(get_current_user_active), db:Session = 
             "detail": "get success"
         }
     }
+
 
 @route.patch("/user/update/me")
 def update_me(user_update: UpdateMe, user: User = Depends(get_current_user_active), db: Session = Depends(get_db)):
@@ -108,21 +135,24 @@ def update_me(user_update: UpdateMe, user: User = Depends(get_current_user_activ
         }
     }
 
+
 @route.patch("/user/update/avatar")
-def update_avatar(avatar:str, user:User= Depends(get_current_user_active), db: Session=Depends(get_db)):
+def update_avatar(avatar: str, user: User = Depends(get_current_user_active), db: Session = Depends(get_db)):
     service = UserService(db=db)
     response = service.update_avatar_to_user(user_obj=user, avatar=avatar)
-    return make_response_json(data = response, status=200, message="update avatar success")
+    return make_response_json(data=response, status=200, message="update avatar success")
+
 
 @route.patch("/user/change_password")
-def update_avatar(request: ChangePassword, user:User= Depends(get_current_user_active), db: Session=Depends(get_db)):
+def update_avatar(request: ChangePassword, user: User = Depends(get_current_user_active),
+                  db: Session = Depends(get_db)):
     service = UserService(db=db)
     response = service.change_password_to_user(user_obj=user, request=request)
-    return make_response_json(data = response, status=200, message="update avatar success")
+    return make_response_json(data=response, status=200, message="update avatar success")
+
 
 @route.patch("/user/change/image_cover")
-def change_image_cover(image_cover:str, user:User= Depends(get_current_user_active), db: Session=Depends(get_db)):
+def change_image_cover(image_cover: str, user: User = Depends(get_current_user_active), db: Session = Depends(get_db)):
     service = UserService(db=db)
     response = service.update_image_cover_to_user(user, image_cover)
-    return make_response_json(data = response, status=200, message="update avatar success")
-
+    return make_response_json(data=response, status=200, message="update avatar success")

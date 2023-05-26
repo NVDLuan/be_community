@@ -29,7 +29,7 @@ class RecommentUpdate(BaseModel):
 
 class RecommentResponse(BaseModel):
     id: Optional[str] = None
-    user: Optional[UserInfo]= None
+    user: Optional[UserInfo] = None
     id_cmt: Optional[str] = None
     content: Optional[str] = None
     image: Optional[str] = None

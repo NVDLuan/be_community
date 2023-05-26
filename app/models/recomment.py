@@ -1,13 +1,13 @@
 from datetime import datetime
 
-from sqlalchemy import Column, Integer, String, DateTime, ForeignKey
+from sqlalchemy import Column
+from sqlalchemy import DateTime
+from sqlalchemy import ForeignKey
+from sqlalchemy import String
 from sqlalchemy.orm import relationship
 
-
-from app.models.user import User
-
-
 from app.models.base import Base
+from app.models.user import User
 
 
 class Recomment(Base):

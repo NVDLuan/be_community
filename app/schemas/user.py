@@ -1,7 +1,10 @@
-from datetime import date, datetime
-from typing import Optional, List
+from datetime import date
+from datetime import datetime
+from typing import Optional
 
-from pydantic import BaseModel, EmailStr, Field
+from pydantic import BaseModel
+from pydantic import EmailStr
+from pydantic import Field
 
 
 class UserBase(BaseModel):
@@ -15,8 +18,10 @@ class UserBase(BaseModel):
     fullname: Optional[str] = None
     birthday: Optional[date] = None
     description: Optional[str] = None
+
     class Config:
         orm_mode = True
+
 
 class UserLogin(BaseModel):
     email: Optional[str] = None
@@ -49,19 +54,22 @@ class UserUpdate(BaseModel):
     image_cover: Optional[str] = None
     time_create: Optional[datetime] = None
 
-class UserInfo(BaseModel):
-     id: str = Field(alias="id_user")
-     avatar:str
-     fullname: str
 
-     class Config:
-         allow_population_by_field_name = True
-         orm_mode = True
+class UserInfo(BaseModel):
+    id: str = Field(alias="id_user")
+    avatar: str
+    fullname: str
+
+    class Config:
+        allow_population_by_field_name = True
+        orm_mode = True
+
 
 class ChangePassword(BaseModel):
     password: Optional[str] = None
     password_new: Optional[str] = None
     confirm_password: Optional[str] = None
+
 
 class ResponseUser(BaseModel):
     id: Optional[str] = None
@@ -78,6 +86,7 @@ class ResponseUser(BaseModel):
     follower_count: Optional[int] = None
     following_count: Optional[int] = None
     check_follow: Optional[bool] = None
+
     class Config:
         orm_mode = True
 
@@ -86,4 +95,3 @@ class ChangePassword(BaseModel):
     password: Optional[str] = None
     new_password: Optional[str] = None
     confirm_password: Optional[str] = None
-

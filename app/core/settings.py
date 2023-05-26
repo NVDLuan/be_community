@@ -1,5 +1,10 @@
-from typing import Optional, Dict, Any
-from pydantic import BaseSettings, PostgresDsn, validator
+from typing import Any
+from typing import Dict
+from typing import Optional
+
+from pydantic import BaseSettings
+from pydantic import PostgresDsn
+from pydantic import validator
 
 
 class Settings(BaseSettings):
@@ -20,8 +25,9 @@ class Settings(BaseSettings):
 
     EMAIL: Optional[str] = None
     PASSWORD_EMAIL: Optional[str] = None
+
     @validator("SQLALCHEMY_DATABASE_URI", pre=True)
-    def assemble_db_connection(cls, v: Optional[str],  values: Dict[str, Any]) -> Any:
+    def assemble_db_connection(cls, v: Optional[str], values: Dict[str, Any]) -> Any:
         if isinstance(v, str):
             return v
         return PostgresDsn.build(
